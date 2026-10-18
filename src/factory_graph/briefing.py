@@ -60,13 +60,21 @@ def explain(plan, baseline):
         )
     evidence = {"strategy": plan["strategy"], "event": plan["event"], "facts": facts}
     result = {"hash": plan["hash"], "revision": plan["revision"], "model": model}
+    schema = Selection.model_json_schema()
+    for field, group in (
+        ("summary_ids", "summary"),
+        ("tradeoff_ids", "tradeoffs"),
+        ("check_ids", "checks"),
+    ):
+        schema["properties"][field]["items"]["enum"] = list(facts[group])
+        schema["properties"][field]["uniqueItems"] = True
     try:
         response = httpx.post(
             os.getenv("OLLAMA_URL", "http://127.0.0.1:11434").rstrip("/") + "/api/chat",
             json={
                 "model": model,
                 "stream": False,
-                "format": Selection.model_json_schema(),
+                "format": schema,
                 "options": {"temperature": 0, "num_predict": 180, "num_ctx": 8192},
                 "messages": [
                     {
@@ -95,22 +103,42 @@ def explain(plan, baseline):
             if len(ids) != len(set(ids)) or any(key not in facts[group] for key in ids):
                 raise ValueError("Model selected unsupported evidence")
             output[group] = [facts[group][key] for key in ids]
-        if "comparison" not in selected.summary_ids or "approval" not in selected.check_ids:
-            raise ValueError("Missing comparison or human control")
+        # Essential context is an application guarantee, never a model decision.
+        output["summary"] = [facts["summary"]["comparison"]] + [
+            facts["summary"][key] for key in selected.summary_ids if key != "comparison"
+        ][:1]
+        output["checks"] = [facts["checks"]["approval"]] + [
+            facts["checks"][key] for key in selected.check_ids if key != "approval"
+        ]
         output["summary"] = " ".join(output["summary"])
         return {
             **result,
             "provider": "ollama",
             "status": "generated",
             **output,
-            "grounding": "Gemma selects key points; displayed wording comes only from server-calculated facts.",
+            "grounding": "Gemma selects key points from calculated facts. The app always includes the cost comparison and operator-approval reminder.",
         }
 
-    except (httpx.HTTPError, ValueError, KeyError, TypeError):
+    except (httpx.HTTPError, ValueError, KeyError, TypeError) as exc:
+        if isinstance(exc, httpx.TimeoutException):
+            reason = "timeout"
+            detail = "Gemma took too long to respond. Wait for the model to load, then regenerate."
+        elif isinstance(exc, httpx.ConnectError):
+            reason = "unreachable"
+            detail = (
+                "The app cannot reach Ollama. Check that it is running and OLLAMA_URL is correct."
+            )
+        elif isinstance(exc, httpx.HTTPStatusError):
+            reason = "model_missing" if exc.response.status_code == 404 else "service_error"
+            detail = "Ollama could not serve the configured model. Check ollama list and the service logs."
+        else:
+            reason = "invalid_response"
+            detail = "Gemma returned an unsupported fact selection. Regenerate to try again."
         return {
             **result,
             "provider": "deterministic",
             "status": "fallback",
+            "fallback_reason": reason,
             "summary": "The selected proposal reschedules the affected work under the configured "
             "resource, dependency and shift rules. Compare its estimated costs and customer "
             "deadlines in the tables before approving.",
@@ -118,6 +146,6 @@ def explain(plan, baseline):
             "checks": [
                 "Review source rates and assignments; only an explicit approval applies a plan."
             ],
-            "notice": "Gemma is unavailable or returned an invalid briefing. Showing a rule-based "
-            "summary; the recovery workflow remains available.",
+            "notice": detail
+            + " Showing a rule-based summary; the recovery workflow remains available.",
         }

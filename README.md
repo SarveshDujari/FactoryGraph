@@ -301,7 +301,7 @@ flowchart LR
     Fallback --> Card
 ```
 
-Gemma selects summary, trade-off and check IDs from supplied categories. The server rejects unknown IDs, duplicates, malformed output, missing cost-comparison evidence and missing human-approval evidence. Displayed wording comes from calculated facts rather than unrestricted model prose.
+Gemma selects summary, trade-off and check IDs from supplied categories. The response schema restricts selections to available fact IDs. The server rejects unknown IDs, duplicates and malformed output. It always includes the cost comparison and operator-approval reminder, even when Gemma omits them. Displayed wording comes from calculated facts rather than unrestricted model prose.
 
 | Gemma can | Gemma cannot |
 |---|---|
@@ -735,7 +735,7 @@ uv run pytest --junitxml=docs/test-results.xml
 
 Set `RUN_INTEGRATION=1` in that session if the report should include database tests.
 
-**Latest recorded full local run: 56 tests passed in 14.53 seconds.** This is suite duration on the development machine, not an inference or service-throughput benchmark.
+**Latest recorded full local run: 61 tests passed in 13.36 seconds.** This is suite duration on the development machine, not an inference or service-throughput benchmark.
 
 Verified areas include:
 
