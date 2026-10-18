@@ -22,4 +22,5 @@ Thumbs.db
 # Keep local demo screenshots, reports and development notes off GitHub.
 docs/*
 !docs/ARCHITECTURE.md
+!docs/images/
 src/factory_graph/static/mobile-preview.html
