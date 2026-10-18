@@ -1,19 +1,15 @@
-Factory Graph
-Original Graph Hacks implementation created October 17, 2026 with Codex assistance.
+FactoryGraph
 
-Architectural reference:
-Production Orchestrator by James Sesler and contributors
+Original application implementation, created with substantial Codex assistance.
+Distributed under the Apache License, Version 2.0; see LICENSE.
+
+Architectural reference: Production Orchestrator by James Sesler and contributors
 https://github.com/TheAmericanMaker/production-orchestrator
-Inspected repository at the commit recorded in docs/PROVENANCE.md.
-Upstream notice, preserved for attribution:
-Production Orchestrator
-Copyright 2026 James Sesler and the Production Orchestrator contributors
+Reference copyright: 2026 James Sesler and the Production Orchestrator contributors.
 
-This product includes software developed by the Strands Agents project and other
-third-party dependencies identified by the project's locked dependency metadata.
+The reference informed architectural ideas. Its application source is not bundled
+with this repository. FactoryGraph uses its own FalkorDB, FastAPI, LangGraph and
+browser implementation. It does not depend on AWS or Strands Agents.
 
-The preceding paragraph is upstream's notice. This new implementation does not
-depend on Strands or AWS and does not copy upstream's application source files.
-See uv.lock for this project's actual dependencies. Apache-2.0 license text is
-preserved from the reference repository. No upstream deployment or test evidence
-is claimed as evidence for Factory Graph.
+Actual dependencies are listed in pyproject.toml and uv.lock.
+Reference details and original contributions are recorded in docs/PROVENANCE.md.

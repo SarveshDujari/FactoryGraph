@@ -57,7 +57,7 @@ ollama pull gemma3:4b
 
 The briefing model defaults to `gemma3:4b`. Configure `OLLAMA_BRIEFING_MODEL` to override it. Native Python uses `http://127.0.0.1:11434`; Compose uses `http://host.docker.internal:11434`. `OLLAMA_URL` overrides the address.
 
-Gemma selects useful summary, trade-off and review fact IDs from calculated evidence. The server validates those selections and renders their wording. It cannot invent displayed monetary figures, change assignments, purchase supplies or approve a plan. Invalid/unavailable responses use a labelled rule-based fallback. The legacy `OLLAMA_MODEL` investigation/recommendation setting is separate and optional.
+Gemma selects useful summary, trade-off and review fact IDs from calculated evidence. The server validates those selections and renders their wording. It cannot invent displayed monetary figures, change assignments, purchase supplies or approve a plan. Invalid/unavailable responses use a labelled rule-based fallback. The optional legacy investigation/recommendation layer can use `OLLAMA_MODEL=gemma3:270m`; that smaller model has not been live-validated for this role. It is separate from the tested `gemma3:4b` briefing model.
 
 ## Verification
 
