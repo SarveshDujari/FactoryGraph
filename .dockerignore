@@ -1,0 +1,17 @@
+.venv
+.uv-cache
+.uv-clean
+.npm-cache
+data
+__pycache__
+.pytest_cache
+.ruff_cache
+.git
+docs
+tests
+src/factory_graph/static/mobile-preview.html
+.env
+.env.*
+*.sqlite
+*.db
+*.log

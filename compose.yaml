@@ -1,0 +1,36 @@
+services:
+  graph:
+    image: falkordb/falkordb@sha256:b0bdcac2cbaff989e77cb0610439b7a9289e86de033ccbbd4368b66fb680ae7a
+    ports:
+      - "127.0.0.1:6381:6379"
+    volumes:
+      - graph-data:/var/lib/falkordb/data
+    command: ["--appendonly", "yes"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+  app:
+    build: .
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      FALKOR_HOST: graph
+      FALKOR_PORT: 6379
+      CHECKPOINT_PATH: /app/data/checkpoints.sqlite
+      FALKOR_GRAPH: ${FALKOR_GRAPH:-factory_graph_v2}
+      PLANNING_DAYS: ${PLANNING_DAYS:-7}
+      AUTO_PROCUREMENT: ${AUTO_PROCUREMENT:-1}
+      SHOP_TOKENS: ${SHOP_TOKENS:-}
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-}
+      OLLAMA_BRIEFING_MODEL: ${OLLAMA_BRIEFING_MODEL:-gemma3:4b}
+      OLLAMA_URL: ${OLLAMA_URL:-http://host.docker.internal:11434}
+    volumes:
+      - workflow-data:/app/data
+    depends_on:
+      graph:
+        condition: service_healthy
+volumes:
+  graph-data:
+  workflow-data:

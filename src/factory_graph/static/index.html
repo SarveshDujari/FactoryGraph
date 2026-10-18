@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#ee572a" />
+    <title>Factory Graph — Operations control</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+    <script src="/static/app.js" defer></script>
+    <script src="/static/operations.js" defer></script>
+    <link rel="stylesheet" href="/static/operations.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to operations</a>
+    <aside class="rail" aria-label="Workspace navigation">
+      <a class="brand-mark" href="#overview" aria-label="Factory Graph home"
+        ><svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <path
+            d="M4 26V12l8 5V9l8 5V5h7v21H4Z"
+            stroke="currentColor"
+            stroke-width="2.4"
+          />
+          <path
+            d="M9 22h3m5 0h3m4 0h1"
+            stroke="currentColor"
+            stroke-width="2"
+          /></svg
+      ></a>
+      <div class="rail-label">WORKSPACE</div>
+      <nav id="rail-nav">
+        <button
+          class="rail-item active"
+          data-view="overview"
+          aria-current="page"
+        >
+          <span data-icon="dashboard"></span><span>Floor</span>
+        </button>
+        <button class="rail-item" data-view="investigate">
+          <span data-icon="network"></span><span>Impact</span>
+        </button>
+        <button class="rail-item" data-view="operations">
+          <span data-icon="pulse"></span><span>Exposure</span>
+        </button>
+        <button class="rail-item" data-view="review">
+          <span data-icon="layers"></span><span>Recovery</span
+          ><span class="rail-dot" id="review-dot" hidden></span>
+        </button>
+        <button class="rail-item" data-view="procurement">
+          <span data-icon="box"></span><span>Materials</span>
+        </button>
+        <button class="rail-item" data-view="history">
+          <span data-icon="history"></span><span>Memory</span>
+        </button>
+      </nav>
+      <div class="rail-bottom">
+        <button class="rail-item" id="settings-open">
+          <span data-icon="settings"></span><span>Settings</span></button
+        ><span class="rail-version">FG / 02</span>
+      </div>
+    </aside>
+    <div class="workspace">
+      <header class="topbar">
+        <div class="wordmark">
+          FACTORY<span>GRAPH</span><span class="wordmark-divider"></span
+          ><span class="workspace-name">OPERATIONS CONTROL</span>
+        </div>
+        <div class="topbar-right">
+          <button class="scenario-trigger" id="scenario-open">
+            <span class="demo-dot"></span
+            ><span id="scenario-label">Machine outage</span
+            ><span data-icon="chevron"></span></button
+          ><span class="connection" id="connection" role="status"
+            ><i></i><span>Connecting</span></span
+          ><button
+            class="avatar"
+            id="shop-open"
+            aria-label="Open shop settings"
+          >
+            FG
+          </button>
+        </div>
+      </header>
+      <main id="main" tabindex="-1">
+        <div class="page-meta">
+          <span><span class="live-dot"></span> LOCAL DEMO / SYNTHETIC SHOP</span
+          ><span id="revision">CONNECTING TO FLOOR</span>
+        </div>
+        <section class="hero" aria-labelledby="page-title">
+          <div class="hero-copy">
+            <div class="eyebrow">
+              <span class="small-rule"></span> CONTEXT IN. CONFIDENCE OUT.
+            </div>
+            <h1 id="page-title">KEEP THE FLOOR.<br /><span>MOVING.</span></h1>
+            <p>
+              When a machine stops, your context shouldn’t.<br />Trace the
+              impact. Find a recovery. Make the call.
+            </p>
+            <button class="text-button ops-hero-link" data-view="operations">
+              Plan in hours. See the cost. <span data-icon="arrow"></span>
+            </button>
+            <div class="hero-tags">
+              <span><i class="dot green"></i> Graph-grounded decisions</span
+              ><span><i class="dot orange"></i> Human-approved action</span>
+            </div>
+          </div>
+          <div class="incident-card">
+            <div class="incident-card-top">
+              <span class="eyebrow">01 / DISRUPTION DESK</span
+              ><span data-icon="pulse"></span>
+            </div>
+            <h2>
+              Something stopped?<br />
+              Start here.
+            </h2>
+            <div id="hourly-quickstart" hidden>
+              <p>
+                Report the stop in hours. Compare the cost, protect customer
+                orders, and review the repair.
+              </p>
+              <p class="field-help">
+                Your production schedule changes only after you approve a
+                recovery.
+              </p>
+              <button
+                class="button dark full"
+                data-view="operations"
+                type="button"
+              >
+                Open exposure & repair <span data-icon="arrow"></span>
+              </button>
+            </div>
+            <form id="incident-form" novalidate>
+              <label for="machine">Affected machine</label
+              ><select id="machine">
+                <option value="M1">Atlas / Embroidery</option>
+                <option value="M2">Nova / Embroidery</option>
+                <option value="M3">Finish / Packing</option>
+              </select>
+              <div class="date-inputs">
+                <div>
+                  <label for="day">From day</label
+                  ><input
+                    id="day"
+                    type="number"
+                    min="0"
+                    max="29"
+                    value="0"
+                    required
+                    aria-describedby="incident-hint"
+                  />
+                </div>
+                <span>→</span>
+                <div>
+                  <label for="until">Through day</label
+                  ><input
+                    id="until"
+                    type="number"
+                    min="0"
+                    max="29"
+                    value="0"
+                    required
+                  />
+                </div>
+              </div>
+              <p class="field-help" id="incident-hint">
+                Day 0 is the demo’s reference day. Dates are relative.
+              </p>
+              <p
+                class="field-error"
+                id="incident-error"
+                role="alert"
+                hidden
+              ></p>
+              <button class="button dark full" id="analyze" type="submit">
+                <span>Find recovery plans</span><span data-icon="arrow"></span>
+              </button>
+            </form>
+          </div>
+        </section>
+        <div
+          id="notice"
+          class="notice"
+          role="status"
+          aria-live="polite"
+          hidden
+        ></div>
+        <section class="kpi-grid" aria-label="Operational summary" id="kpis">
+          <div class="skeleton kpi-placeholder"></div>
+          <div class="skeleton kpi-placeholder"></div>
+          <div class="skeleton kpi-placeholder"></div>
+          <div class="skeleton kpi-placeholder"></div>
+        </section>
+        <nav class="workflow-nav" aria-label="Recovery workflow">
+          <div class="workflow-primary">
+            <button data-view="overview" class="active" aria-current="page">
+              <span>01</span> Overview</button
+            ><button data-view="investigate"><span>02</span> Investigate</button
+            ><button data-view="review">
+              <span>03</span> Review recovery <b id="review-count" hidden></b>
+            </button>
+          </div>
+          <div class="workflow-secondary">
+            <button data-view="operations">Exposure & repair</button>
+            <button data-view="procurement">Materials</button
+            ><button data-view="history">Activity & memory</button>
+          </div>
+        </nav>
+        <section id="view-overview" class="view" aria-label="Floor overview">
+          <div class="overview-grid">
+            <section class="panel schedule-panel">
+              <div class="panel-head">
+                <div>
+                  <div class="eyebrow">THE LIVE PICTURE</div>
+                  <h2>Production floor</h2>
+                </div>
+                <div
+                  class="segmented"
+                  id="schedule-mode"
+                  aria-label="Schedule display"
+                >
+                  <button
+                    data-mode="schedule"
+                    aria-pressed="true"
+                    class="active"
+                  >
+                    Schedule</button
+                  ><button data-mode="table" aria-pressed="false">Table</button>
+                </div>
+              </div>
+              <div class="schedule-tools">
+                <span id="schedule-caption">Loading machine assignments…</span>
+                <div
+                  class="segmented small"
+                  id="schedule-version"
+                  aria-label="Schedule version"
+                  hidden
+                >
+                  <button
+                    data-version="current"
+                    class="active"
+                    aria-pressed="true"
+                  >
+                    Current</button
+                  ><button data-version="before" aria-pressed="false">
+                    Before recovery</button
+                  ><button data-version="proposed" aria-pressed="false">
+                    Proposed
+                  </button>
+                </div>
+              </div>
+              <div id="board" aria-live="polite">
+                <div class="skeleton board-placeholder"></div>
+              </div>
+              <div class="schedule-legend">
+                <span><i class="legend-block"></i> Scheduled job</span
+                ><span><i class="legend-block late"></i> Past due day</span
+                ><span><i class="legend-block outage"></i> Outage window</span
+                ><span class="legend-note"
+                  >Bars show hours within a day; not clock-time bookings.</span
+                >
+              </div>
+            </section>
+            <aside class="overview-side">
+              <section class="brief-panel" id="brief">
+                <div class="eyebrow">NEXT BEST MOVE</div>
+                <h2>See the whole<br />chain reaction.</h2>
+                <p>
+                  Start with an outage. We’ll follow the connections from the
+                  machine to the customer promise.
+                </p>
+                <button class="text-button light" id="focus-incident">
+                  Set up an incident <span data-icon="arrow"></span>
+                </button>
+                <div class="brief-grid-art" aria-hidden="true">
+                  <span>MACHINE</span><i></i><span>JOB</span><i></i
+                  ><span>PROMISE</span>
+                </div>
+              </section>
+              <section class="panel compact">
+                <div class="panel-head">
+                  <h2>Floor activity</h2>
+                  <button class="text-button" data-view="history">
+                    View all <span data-icon="arrow"></span>
+                  </button>
+                </div>
+                <div id="recent-activity" class="activity-mini">
+                  <p class="empty-copy">Loading activity…</p>
+                </div>
+              </section>
+            </aside>
+          </div>
+        </section>
+        <section
+          id="view-investigate"
+          class="view"
+          aria-label="Impact investigation"
+          hidden
+        >
+          <div class="section-title">
+            <div>
+              <div class="eyebrow">FOLLOW THE CONSEQUENCES</div>
+              <h2>One outage. A connected story.</h2>
+              <p>
+                Choose a node to highlight its paths and inspect the evidence.
+              </p>
+            </div>
+            <button class="button secondary" data-view="review">
+              Review recovery <span data-icon="arrow"></span>
+            </button>
+          </div>
+          <div id="investigation-content"></div>
+        </section>
+        <section
+          id="view-review"
+          class="view"
+          aria-label="Recovery review"
+          hidden
+        >
+          <div id="review-content"></div>
+        </section>
+        <section
+          id="view-procurement"
+          class="view"
+          aria-label="Materials and procurement"
+          hidden
+        >
+          <div class="section-title">
+            <div>
+              <div class="eyebrow">KEEP THE HANDOFF MOVING</div>
+              <h2>Materials, without loose ends.</h2>
+              <p>
+                Track requests, confirm arrivals, and account for every
+                reservation.
+              </p>
+            </div>
+            <button class="button secondary" id="worker">
+              <span data-icon="refresh"></span> Process pending requests
+            </button>
+          </div>
+          <div class="filter-bar" id="task-filters" aria-label="Request filter">
+            <button data-task-filter="all" class="active" aria-pressed="true">
+              All requests</button
+            ><button data-task-filter="open" aria-pressed="false">Open</button
+            ><button data-task-filter="received" aria-pressed="false">
+              Received</button
+            ><button data-task-filter="failed" aria-pressed="false">
+              Needs attention
+            </button>
+          </div>
+          <div id="tasks"></div>
+          <div class="section-title smaller">
+            <div>
+              <div class="eyebrow">STOCK ACCOUNTABILITY</div>
+              <h2>Material reservations</h2>
+            </div>
+          </div>
+          <div id="reservations"></div>
+        </section>
+        <section
+          id="view-history"
+          class="view"
+          aria-label="Activity and memory"
+          hidden
+        >
+          <div class="section-title">
+            <div>
+              <div class="eyebrow">THE NEXT RECOVERY STARTS HERE</div>
+              <h2>A floor that remembers.</h2>
+              <p>
+                Decisions, deliveries, and procedures — with a source behind
+                each one.
+              </p>
+            </div>
+          </div>
+          <div
+            class="filter-bar"
+            id="memory-filters"
+            aria-label="Memory filter"
+          >
+            <button data-memory-filter="all" class="active" aria-pressed="true">
+              All activity</button
+            ><button data-memory-filter="episodic" aria-pressed="false">
+              Incidents</button
+            ><button data-memory-filter="semantic" aria-pressed="false">
+              Operational knowledge</button
+            ><button data-memory-filter="procedural" aria-pressed="false">
+              Procedures</button
+            ><button data-memory-filter="decisions" aria-pressed="false">
+              Decisions
+            </button>
+          </div>
+          <div id="memory"></div>
+        </section>
+        <section
+          id="view-operations"
+          class="view"
+          aria-label="Hourly exposure and repair"
+          hidden
+        >
+          <div id="operations-root"></div>
+        </section>
+        <footer>
+          <span class="footer-brand">BUILT FOR THE UNEXPECTED.</span
+          ><span>FalkorDB context · Durable workflows · Human control</span
+          ><span>FACTORY GRAPH / LOCAL</span>
+        </footer>
+      </main>
+    </div>
+    <div id="review-actionbar" class="review-actionbar" hidden></div>
+    <dialog id="drawer" class="drawer" aria-labelledby="drawer-title">
+      <div class="drawer-head">
+        <div>
+          <div class="eyebrow" id="drawer-eyebrow">DETAILS</div>
+          <h2 id="drawer-title">Details</h2>
+        </div>
+        <button
+          class="icon-button"
+          data-close="drawer"
+          aria-label="Close details"
+        >
+          <span data-icon="close"></span>
+        </button>
+      </div>
+      <div id="drawer-body"></div>
+    </dialog>
+    <dialog
+      id="confirm-dialog"
+      class="confirm-dialog"
+      aria-labelledby="confirm-title"
+    >
+      <div class="drawer-head">
+        <h2 id="confirm-title">Review action</h2>
+        <button
+          class="icon-button"
+          data-close="confirm-dialog"
+          aria-label="Close confirmation"
+        >
+          <span data-icon="close"></span>
+        </button>
+      </div>
+      <div id="confirm-body"></div>
+    </dialog>
+    <noscript
+      ><p class="noscript">
+        Enable JavaScript to use the recovery desk.
+      </p></noscript
+    >
+    <dialog
+      id="factory-wizard"
+      class="factory-wizard"
+      aria-labelledby="wizard-title"
+    ></dialog>
+  </body>
+</html>

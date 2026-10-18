@@ -1,0 +1,26 @@
+.venv/
+.uv-cache/
+.uv-clean/
+.npm-cache/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+data/
+.env
+.env.*
+!.env.example
+*.sqlite
+*.sqlite-*
+*.db
+*.log
+*.pem
+*.key
+.DS_Store
+Thumbs.db
+
+# Keep local demo screenshots, reports and development notes off GitHub.
+docs/*
+!docs/ARCHITECTURE.md
+!docs/PROVENANCE.md
+src/factory_graph/static/mobile-preview.html
