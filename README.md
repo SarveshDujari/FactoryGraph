@@ -103,8 +103,8 @@ Hourly recovery supports up to twelve affected jobs and 100,000 search visits. T
 
 Health readings are simulated threshold checks, not live telemetry or failure predictions. Financial estimates depend on configured rates and exclude tax, energy, sunk work and lost margin. FalkorDB stores operational state; SQLite stores workflow checkpoints. Preserve both stores consistently.
 
-## Architecture and attribution
+## Architecture
 
-Built with Python, FastAPI, FalkorDB, LangGraph, SQLite and vanilla HTML/CSS/JavaScript, with optional Ollama. See [architecture](docs/ARCHITECTURE.md) and [provenance](docs/PROVENANCE.md).
+Built with Python, FastAPI, FalkorDB, LangGraph, SQLite and vanilla HTML/CSS/JavaScript, with optional Ollama. See [architecture](docs/ARCHITECTURE.md).
 
-Inspired by James Sesler's Apache-2.0 Production Orchestrator. Attribution is retained in [NOTICE](NOTICE); the project is distributed under [Apache-2.0](LICENSE). Built with substantial Codex assistance. Hackathon track eligibility is determined by the organisers; source publication does not submit an entry.
+Built with substantial Codex assistance. Hackathon track eligibility is determined by the organisers; source publication does not submit an entry.
