@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="theme-color" content="#ee572a" />
     <title>Factory Graph — Operations control</title>
-    <link rel="stylesheet" href="/static/styles.css" />
-    <script src="/static/app.js" defer></script>
-    <script src="/static/operations.js" defer></script>
-    <link rel="stylesheet" href="/static/operations.css" />
+    <link rel="stylesheet" href="/static/styles.css?v=guided-2" />
+    <script src="/static/app.js?v=guided-2" defer></script>
+    <script src="/static/operations.js?v=guided-2" defer></script>
+    <script src="/static/guided-demo.js?v=guided-2" defer></script>
+    <link rel="stylesheet" href="/static/operations.css?v=guided-2" />
+    <link rel="stylesheet" href="/static/guided-demo.css?v=guided-2" />
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to operations</a>
@@ -28,6 +30,9 @@
       ></a>
       <div class="rail-label">WORKSPACE</div>
       <nav id="rail-nav">
+        <button class="rail-item" data-view="demo">
+          <span data-icon="file"></span><span>Guide</span>
+        </button>
         <button
           class="rail-item active"
           data-view="overview"
@@ -97,6 +102,9 @@
             </p>
             <button class="text-button ops-hero-link" data-view="operations">
               Plan in hours. See the cost. <span data-icon="arrow"></span>
+            </button>
+            <button class="button dark" data-view="demo">
+              Walk me through a breakdown <span data-icon="arrow"></span>
             </button>
             <div class="hero-tags">
               <span><i class="dot green"></i> Graph-grounded decisions</span
@@ -398,6 +406,14 @@
           hidden
         >
           <div id="operations-root"></div>
+        </section>
+        <section
+          id="view-demo"
+          class="view"
+          aria-label="Guided factory breakdown demo"
+          hidden
+        >
+          <div id="guided-demo-root"></div>
         </section>
         <footer>
           <span class="footer-brand">BUILT FOR THE UNEXPECTED.</span

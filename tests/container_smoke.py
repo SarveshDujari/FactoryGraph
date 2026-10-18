@@ -19,6 +19,9 @@ try:
         assert client.get("/").status_code == 200
         assert "machine-schedule" in client.get("/static/app.js").text
         assert client.get("/static/styles.css").status_code == 200
+        assert 'data-view="demo"' in client.get("/").text
+        assert client.get("/static/guided-demo.js").status_code == 200
+        assert client.get("/static/guided-demo.css").status_code == 200
         response = client.post("/api/incidents", json={"machine": "M1", "day": 0, "until": 0})
         assert response.status_code == 200, response.text
         incident = response.json()

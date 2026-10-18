@@ -195,10 +195,12 @@ function setView(view, scroll = false) {
       "procurement",
       "history",
       "operations",
+      "demo",
     ].includes(view)
   )
     return;
   state.view = view;
+  document.body.classList.toggle("guided-demo", view === "demo");
   document
     .querySelectorAll(".view")
     .forEach((el) => (el.hidden = el.id !== "view-" + view));
@@ -211,13 +213,16 @@ function setView(view, scroll = false) {
   renderActionbar();
   if (view === "operations")
     document.dispatchEvent(new CustomEvent("factory:operations"));
+  if (view === "demo") document.dispatchEvent(new CustomEvent("factory:demo"));
   if (scroll)
-    document.querySelector(".workflow-nav").scrollIntoView({
-      block: "start",
-      behavior: matchMedia("(prefers-reduced-motion: reduce)").matches
-        ? "instant"
-        : "smooth",
-    });
+    document
+      .querySelector(view === "demo" ? "#view-demo" : ".workflow-nav")
+      .scrollIntoView({
+        block: "start",
+        behavior: matchMedia("(prefers-reduced-motion: reduce)").matches
+          ? "instant"
+          : "smooth",
+      });
 }
 function setConnection(online) {
   $("connection").className = "connection " + (online ? "online" : "offline");

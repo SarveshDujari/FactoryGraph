@@ -474,6 +474,14 @@ Optionally set `$env:OLLAMA_MODEL='gemma3:270m'` before starting the server for 
 
 ## Complete demo walkthrough
 
+### Start with the guided demo
+
+Open **Guide** in the sidebar, or **Walk me through a breakdown** on the home screen. Start a practice run to create a separate synthetic factory; existing factories remain available.
+
+The eight screens explain the factory, breakdown, impact, recovery, approval, repair, restoration and memory in that order. Each screen gives you one next action. Before/after assignments, customer deadlines and calculated costs make the result visible. Optional Gemma commentary explains the saved proposal; it cannot approve it. Both recovery and restoration require explicit confirmation.
+
+Progress resumes in the same browser and workspace. **Start a fresh practice run** creates another factory instead of erasing history. The guide uses the real application APIs and saved reviews. Its factory rates are demonstration assumptions, not measured business results. The detailed workspace walkthrough follows below.
+
 ### 1. Create a fresh factory
 
 Open **Exposure → Configure a factory**. The wizard has four steps:
@@ -692,7 +700,9 @@ FactoryGraph/
 │       ├── app.js                  # Shared UI and original workflow screens
 │       ├── styles.css              # Core responsive visual system
 │       ├── operations.js           # Hourly UI, wizard and briefing
-│       └── operations.css          # Hourly panels and wizard styling
+│       ├── operations.css          # Hourly panels and wizard styling
+│       ├── guided-demo.js          # Eight-step walkthrough using real saved reviews
+│       └── guided-demo.css         # Focused walkthrough layout
 └── tests/
     ├── test_recovery.py             # Solver and model fallback
     ├── test_hourly.py               # Hourly constraints and financial components
@@ -701,12 +711,19 @@ FactoryGraph/
     ├── test_api.py                  # Authentication and workflow isolation
     ├── test_operations.py           # Setup, maintenance and hourly API lifecycle
     ├── test_briefing.py             # Grounding and offline fallback
+    ├── guided-demo.test.cjs         # Walkthrough scope and approval boundaries
     └── container_smoke.py           # Packaged Linux API smoke script
 ```
 
 Virtual environments, caches, runtime databases, generated reports and development-only screenshots are excluded from GitHub. `docs/images/` is reserved for the README screenshots you add.
 
 ## Testing and verification
+
+With Node.js installed, run the dependency-free frontend checks:
+
+```sh
+node --test tests/guided-demo.test.cjs
+```
 
 Install development dependencies and run unit tests without a database:
 
